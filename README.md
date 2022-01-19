@@ -21,3 +21,8 @@ Python 3
 
 **Implementacion de proyecto**
 ![image](https://user-images.githubusercontent.com/10700894/150068545-ebb15190-bdc2-4ad5-bd29-c37cc053c21c.png)
+
+**Video**
+
+https://user-images.githubusercontent.com/10700894/150069963-c90c083f-32de-43ff-985f-4f05d72f90cf.mp4
+
