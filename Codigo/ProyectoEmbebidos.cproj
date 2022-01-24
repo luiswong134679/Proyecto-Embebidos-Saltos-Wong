@@ -134,6 +134,18 @@
     <Compile Include="mat_kbrd.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="servo.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="servo.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonico.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonico.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="UART.h">
       <SubType>compile</SubType>
     </Compile>

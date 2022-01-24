@@ -12,50 +12,14 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "UART.h"
+
 /*VARIABLES GLOBALES*/
 uint8_t angulo=0;
 char* ang;
 bool direccion=true;
+long distancia;
 char* dis;
 bool onDuty=false;
-
-
-void ultraSonicoInit(){
-	DDRD|=(1<<DDD6);//PIN TRIGGED
-	DDRD &=~(1<<DDD7);//PIN ECHO;
-	PORTD &=~ (1<<6) | (1<<7);//SE INICIALIZAN EN ESTADO BAJO
-	TCCR2A=0x00;
-	TCCR2B |= (1<<CS11)|(1<<CS10);
-	
-}
-
-void getDistance(){
-	PORTD|=(1<<6);
-	_delay_us(10);
-	PORTD &=~(1<<6);
-	while ((PIND>>7) && 1 == 0);
-	TCNT2=0;
-	while((PIND>>5) && 1);
-	long long distancia = TCNT2*8*0.017;
-	sprintf(dis,"%lld",distancia);
-}
- 
-void servoInit(){
-	/*INICIALIZAR PWM*/
-	
-	DDRB |= ( 1<< PB1 );  // Configuramos el PB1 como salida.
-	TCNT1 = 0; // Reiniciamos el contador inicial (por siacaso)
-	ICR1 = 19999; // Configuramos el periodo de la señal (el TOP de nuestra PWM)
-	TCCR1A =  (1 << COM1A1) | (0 << COM1A0) ; // Ponemos a 'bajo' el OCR1A cuando coincida el Compare Match
-	TCCR1A |=  (1 << WGM11) | (0 << WGM10) ; // Fast PWM: TOP: ICR1
-	TCCR1B = (1 << WGM13) | (1 << WGM12); // // Fast PWM: TOP: ICR1
-	TCCR1B |= (0 << CS12) | (1 << CS11) | ( 0 << CS10 ); // Preesc = 8
-	OCR1A=1300;//posicion 0 grados
-	
-}
-void servoAngle(uint8_t degree){
-	OCR1A=((2000/90)*degree)+1300;//valor minimo 1300 =0 grados valor maximo 5300
-}
 
 void interrupt_TIMER0_init(){
 	cli(); //deshabilitar momentáneamente las interrupciones
@@ -77,12 +41,17 @@ ISR(TIMER0_OVF_vect){
 			angulo--;
 			if(angulo==0){direccion=true;}
 		}
-		//getDistance();
-		//_delay_us(100);
+		distancia=getDistance();
+		_delay_us(100);
 	
-		//sprintf(ang,"%d",angulo);
-		//UART_write_txt(dis);
-		//UART_write_txt(ang);
+		sprintf(ang,"%d",angulo);
+		sprintf(dis,"%lld",distancia);
+		
+		UART_write_txt(dis);
+		UART_write_txt(",");
+		UART_write_txt(ang);
+		UART_write_txt(".\r\n");
+		
 	
 		TCNT0=12;}
 }
@@ -96,8 +65,6 @@ int main(void)
 	/*INICIALIZAR LA PARTE DEL SENSOR ULTRASONICO Y EL SERVO */
 	servoInit();
 	ultraSonicoInit();
-	getDistance();
-	UART_write_txt(dis);
 	/*INICIALIZA LA PARTE DE LA INTERRUPCION EN TIMER 0 PARA EL MOVIMIENTO Y RECOPILACION DE DATOS*/
 	interrupt_TIMER0_init();
 	
@@ -122,11 +89,6 @@ int main(void)
 	lcd_puts("  SMART CLEANER");
 	_delay_ms(4000);
 	lcd_clrscr();
-	servoAngle(0);
-	
-
-	
-	
 	
     while(1)
     {
@@ -181,10 +143,12 @@ int main(void)
 			}else{
 				lcd_clrscr();
 				lcd_home();
-				lcd_puts("POR FAVOR ESPERE");
-				lcd_gotoxy(0,1);
 				lcd_puts("   TRABAJANDO");
-				_delay_ms(11000);
+				lcd_gotoxy(0,1);
+				lcd_puts("POR FAVOR ESPERE");
+				UART_write();
+				UART_write_txt();
+				UART_write_txt();
 			}
 		
 		
