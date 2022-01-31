@@ -17,7 +17,8 @@ Mostrar una interfaz grafica que permita al usuario visualizar los datos en tiem
 Python 3
 
 **Diagrama esquematico**
-![image](https://user-images.githubusercontent.com/10700894/150063333-e64c45e5-fda3-4b92-abc9-320c448e826e.png)
+![image](https://user-images.githubusercontent.com/10700894/151806530-575f79fb-1eb4-4ca9-bf21-70f358fbf5c9.png)
+
 
 **Implementacion de proyecto**
 ![image](https://user-images.githubusercontent.com/10700894/150068545-ebb15190-bdc2-4ad5-bd29-c37cc053c21c.png)
